@@ -14,24 +14,25 @@ namespace API.Controllers;
 public class AccountController(DataContext context,ITokenService tokenService): BaseApiController
 {
     [HttpPost("register")]  //account/register
-    public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
+    public async Task<ActionResult<UserDto>>Register(RegisterDto registerDto)
 {
     if( await UserExit(registerDto.username))  return BadRequest("Username is taken");
-    using var hmac= new HMACSHA512();
-    var user= new AppUser
-    {
+    return Ok();
+    // using var hmac= new HMACSHA512();
+    // var user= new AppUser
+    // {
         
-        UserName=registerDto.username.ToLower(),
-        PasswordHash=hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.password)),
-        PasswordSalt=hmac.Key
-    };
-    context.Users.Add(user);
-    await context.SaveChangesAsync();
+    //     UserName=registerDto.username.ToLower(),
+    //     PasswordHash=hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.password)),
+    //     PasswordSalt=hmac.Key
+    // };
+    // context.Users.Add(user);
+    // await context.SaveChangesAsync();
     
-    return new UserDto{
-        username=user.UserName,
-        Token=tokenService.CreateToken(user)
-    };
+    // return new UserDto{
+    //     username=user.UserName,
+    //     Token=tokenService.CreateToken(user)
+    // };
 }
 
 [HttpPost("login")] //account/login
