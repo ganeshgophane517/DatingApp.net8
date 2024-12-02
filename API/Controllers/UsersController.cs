@@ -10,10 +10,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers;
 
-[ApiController]
-[Route("api/[controller]")]
+
 [Authorize]
-public class UsersController(IUserRepository userRepository) : BaseApiController     //use primary constructor
+public class UsersController(IUserRepository userRepository,IMapper mapper) : BaseApiController     //use primary constructor
 {
    
     
@@ -22,18 +21,18 @@ public class UsersController(IUserRepository userRepository) : BaseApiController
     {
         var users= await userRepository.GetMembersAsync();
 
-        
-        return Ok(users);
+      return Ok(users);
 
     }
     
     [HttpGet("{username}")]
-    public async Task<ActionResult<MemberDto>>GetUser(string username)
+    public async Task<ActionResult<MemberDto>> GetUser(string username)
     {
       var user =  await userRepository.GetMemberAsync(username);
 
-      if(user==null)
-      return NotFound();
+
+      if(user==null) return NotFound();
+
       return user;
     }
 
