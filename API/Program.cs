@@ -7,8 +7,13 @@ using API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
 
 
 
@@ -33,13 +38,27 @@ app.MapControllers();
 
 var  services =  scope.ServiceProvider;
 try{
-    var context = services.GetRequiredService<DataContext>();
-    await context.Database.MigrateAsync();
-    await Seed.SeedUsers(context);
+   var context = services.GetRequiredService<DataContext>();
+   await context.Database.MigrateAsync();
+   await Seed.SeedUsers(context);
 }
 catch(Exception ex){
-    var logger = services.GetRequiredService<ILogger<Program>>();
-    logger.LogError(ex,"An error occured during migration");
+   var logger = services.GetRequiredService<ILogger<Program>>();
+   logger.LogError(ex,"An error occured during migration");
 }
+
+
+// try
+// {
+
+//     var context = services.GetRequiredService<DataContext>();
+//     await context.Database.MigrateAsync();
+//     await Seed.SeedUsers(context, builder.Configuration); // Pass configuration
+// }
+// catch (Exception ex)
+// {
+//     var logger = services.GetRequiredService<ILogger<Program>>();
+//     logger.LogError(ex, "An error occurred during migration or seeding: {Message}", ex.Message);
+// }
 
 app.Run();

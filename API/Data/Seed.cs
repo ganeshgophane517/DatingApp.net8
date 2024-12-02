@@ -6,33 +6,60 @@ using System.Text.Json;
 using API.Entites;
 using Microsoft.EntityFrameworkCore;
 
-namespace API.Data;
+namespace API.Data
+{
+  
 
-public class Seed
-{ 
-    public static async Task SeedUsers(DataContext context)
-    {
-        if(await context.Users.AnyAsync()) return; 
 
-        var userData = await File.ReadAllTextAsync("./UserSeedData.json");
+    public static class Seed { 
+          public static async Task SeedUsers(DataContext context)
+          {
+            if(await context.Users.AnyAsync()) return;
+            var userData = await File.ReadAllTextAsync("C:\\Users\\User\\DatingApp\\API\\UserSeedData.json");
 
-        var options= new  JsonSerializerOptions{PropertyNameCaseInsensitive = true};
-        
-            var users = JsonSerializer.Deserialize<List<AppUser>>(userData, options);
+            var options = new JsonSerializerOptions{PropertyNameCaseInsensitive = true};
 
-        if (users == null) return;
+            var users = JsonSerializer.Deserialize<List<AppUser>>(userData,options);
+             
+             if(users == null) return;
 
-        foreach(var user in users)
-        {
-             using var hmac= new HMACSHA512();
+            foreach( var user in users)
+            {
+                using var hmac = new HMACSHA512();
+                user.UserName = user.UserName.ToLower();
+                user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes("Pa$$w0rd"));
+                user.PasswordSalt = hmac.Key;
 
-             user.UserName = user.UserName.ToLower();
-             user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes("Pa$$w0rd"));
-             user.PasswordSalt = hmac.Key;
+                context.Users.Add(user);   
 
-             context.Users.Add(user);
-        }
-        await context.SaveChangesAsync();
+            }
+               await context.SaveChangesAsync();
+          }
+
+        // public static async Task SeedUsers(DataContext context, IConfiguration config)
+        // {
+        //     var filePath = config.GetSection("JsonDir")["SeedDataPath"];
+
+        //     if (await context.Users.AnyAsync()) return;
+
+        //     var userData = await File.ReadAllTextAsync(filePath); // Read file from appsettings.json path
+
+        //     var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        //     var users = JsonSerializer.Deserialize<List<AppUser>>(userData, options);
+
+        //     if (users == null) return;
+
+        //     foreach (var user in users)
+        //     {
+        //         using var hmac = new HMACSHA512();
+        //         user.UserName = user.UserName.ToLower();
+        //         user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes("Pa$$w0rd"));
+        //         user.PasswordSalt = hmac.Key;
+
+        //         context.Users.Add(user);
+        //     }
+        //     await context.SaveChangesAsync();
+        // }
+
     }
-
- }
+}

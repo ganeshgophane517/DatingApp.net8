@@ -6,23 +6,27 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+ 
+  <!-- <ItemGroup>
+  <None Update="Data\UserSeedData.json">
+    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+  </None>
+</ItemGroup> -->
   <ItemGroup>
-    <Content Remove="Data\UserSeedData.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="Data\UserSeedData.json" />
+    <none Include="C:\Users\User\DatingApp\API\UserSeedData.json" />
     <!-- <CopyToOutputDirectory>Always</CopyToOutputDirectory> -->
-    <!-- <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> -->
+     <!--<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>--> 
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.10" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.1.2" />
   </ItemGroup>
